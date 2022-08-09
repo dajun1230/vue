@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="../../dist/vue.js"></script>
+</head>
+<body>
+  <div id="app">
+    <h1>初始化流程</h1>
+    <p>{{foo}}</p>
+  </div>
+  <script>
+    // render => template => el
+    // 创建实例
+    const app = new Vue({
+      el: "#app",
+      // template: '<div>template</div>',
+      // template: '#app',
+      // render(h) {return h('div', 'render')},
+      data: {foo: "foo"},
+      props: {
+        user: {
+          value: "123",
+          required: true
+        }
+      },
+      props: ['user']
+    })
+    console.log(app.$options.render);
+  </script>
+</body>
+</html>

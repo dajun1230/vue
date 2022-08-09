@@ -32,7 +32,7 @@ export const emptyNode = new VNode('', {}, [])
 
 const hooks = ['create', 'activate', 'update', 'remove', 'destroy']
 
-function sameVnode (a, b) {
+function sameVnode(a, b) {
   return (
     a.key === b.key &&
     a.asyncFactory === b.asyncFactory && (
@@ -49,7 +49,7 @@ function sameVnode (a, b) {
   )
 }
 
-function sameInputType (a, b) {
+function sameInputType(a, b) {
   if (a.tag !== 'input') return true
   let i
   const typeA = isDef(i = a.data) && isDef(i = i.attrs) && i.type
@@ -57,7 +57,7 @@ function sameInputType (a, b) {
   return typeA === typeB || isTextInputType(typeA) && isTextInputType(typeB)
 }
 
-function createKeyToOldIdx (children, beginIdx, endIdx) {
+function createKeyToOldIdx(children, beginIdx, endIdx) {
   let i, key
   const map = {}
   for (i = beginIdx; i <= endIdx; ++i) {
@@ -67,7 +67,7 @@ function createKeyToOldIdx (children, beginIdx, endIdx) {
   return map
 }
 
-export function createPatchFunction (backend) {
+export function createPatchFunction(backend) {
   let i, j
   const cbs = {}
 
@@ -82,12 +82,12 @@ export function createPatchFunction (backend) {
     }
   }
 
-  function emptyNodeAt (elm) {
+  function emptyNodeAt(elm) {
     return new VNode(nodeOps.tagName(elm).toLowerCase(), {}, [], undefined, elm)
   }
 
-  function createRmCb (childElm, listeners) {
-    function remove () {
+  function createRmCb(childElm, listeners) {
+    function remove() {
       if (--remove.listeners === 0) {
         removeNode(childElm)
       }
@@ -96,7 +96,7 @@ export function createPatchFunction (backend) {
     return remove
   }
 
-  function removeNode (el) {
+  function removeNode(el) {
     const parent = nodeOps.parentNode(el)
     // element may have already been removed due to v-html / v-text
     if (isDef(parent)) {
@@ -104,7 +104,7 @@ export function createPatchFunction (backend) {
     }
   }
 
-  function isUnknownElement (vnode, inVPre) {
+  function isUnknownElement(vnode, inVPre) {
     return (
       !inVPre &&
       !vnode.ns &&
@@ -122,7 +122,7 @@ export function createPatchFunction (backend) {
 
   let creatingElmInVPre = 0
 
-  function createElm (
+  function createElm(
     vnode,
     insertedVnodeQueue,
     parentElm,
@@ -207,7 +207,7 @@ export function createPatchFunction (backend) {
     }
   }
 
-  function createComponent (vnode, insertedVnodeQueue, parentElm, refElm) {
+  function createComponent(vnode, insertedVnodeQueue, parentElm, refElm) {
     let i = vnode.data
     if (isDef(i)) {
       const isReactivated = isDef(vnode.componentInstance) && i.keepAlive
@@ -229,7 +229,7 @@ export function createPatchFunction (backend) {
     }
   }
 
-  function initComponent (vnode, insertedVnodeQueue) {
+  function initComponent(vnode, insertedVnodeQueue) {
     if (isDef(vnode.data.pendingInsert)) {
       insertedVnodeQueue.push.apply(insertedVnodeQueue, vnode.data.pendingInsert)
       vnode.data.pendingInsert = null
@@ -247,7 +247,7 @@ export function createPatchFunction (backend) {
     }
   }
 
-  function reactivateComponent (vnode, insertedVnodeQueue, parentElm, refElm) {
+  function reactivateComponent(vnode, insertedVnodeQueue, parentElm, refElm) {
     let i
     // hack for #4339: a reactivated component with inner transition
     // does not trigger because the inner node's created hooks are not called
@@ -269,7 +269,7 @@ export function createPatchFunction (backend) {
     insert(parentElm, vnode.elm, refElm)
   }
 
-  function insert (parent, elm, ref) {
+  function insert(parent, elm, ref) {
     if (isDef(parent)) {
       if (isDef(ref)) {
         if (nodeOps.parentNode(ref) === parent) {
@@ -281,7 +281,7 @@ export function createPatchFunction (backend) {
     }
   }
 
-  function createChildren (vnode, children, insertedVnodeQueue) {
+  function createChildren(vnode, children, insertedVnodeQueue) {
     if (Array.isArray(children)) {
       if (process.env.NODE_ENV !== 'production') {
         checkDuplicateKeys(children)
@@ -294,14 +294,14 @@ export function createPatchFunction (backend) {
     }
   }
 
-  function isPatchable (vnode) {
+  function isPatchable(vnode) {
     while (vnode.componentInstance) {
       vnode = vnode.componentInstance._vnode
     }
     return isDef(vnode.tag)
   }
 
-  function invokeCreateHooks (vnode, insertedVnodeQueue) {
+  function invokeCreateHooks(vnode, insertedVnodeQueue) {
     for (let i = 0; i < cbs.create.length; ++i) {
       cbs.create[i](emptyNode, vnode)
     }
@@ -315,7 +315,7 @@ export function createPatchFunction (backend) {
   // set scope id attribute for scoped CSS.
   // this is implemented as a special case to avoid the overhead
   // of going through the normal attribute patching process.
-  function setScope (vnode) {
+  function setScope(vnode) {
     let i
     if (isDef(i = vnode.fnScopeId)) {
       nodeOps.setStyleScope(vnode.elm, i)
@@ -338,13 +338,13 @@ export function createPatchFunction (backend) {
     }
   }
 
-  function addVnodes (parentElm, refElm, vnodes, startIdx, endIdx, insertedVnodeQueue) {
+  function addVnodes(parentElm, refElm, vnodes, startIdx, endIdx, insertedVnodeQueue) {
     for (; startIdx <= endIdx; ++startIdx) {
       createElm(vnodes[startIdx], insertedVnodeQueue, parentElm, refElm, false, vnodes, startIdx)
     }
   }
 
-  function invokeDestroyHook (vnode) {
+  function invokeDestroyHook(vnode) {
     let i, j
     const data = vnode.data
     if (isDef(data)) {
@@ -358,7 +358,7 @@ export function createPatchFunction (backend) {
     }
   }
 
-  function removeVnodes (vnodes, startIdx, endIdx) {
+  function removeVnodes(vnodes, startIdx, endIdx) {
     for (; startIdx <= endIdx; ++startIdx) {
       const ch = vnodes[startIdx]
       if (isDef(ch)) {
@@ -372,7 +372,7 @@ export function createPatchFunction (backend) {
     }
   }
 
-  function removeAndInvokeRemoveHook (vnode, rm) {
+  function removeAndInvokeRemoveHook(vnode, rm) {
     if (isDef(rm) || isDef(vnode.data)) {
       let i
       const listeners = cbs.remove.length + 1
@@ -401,7 +401,9 @@ export function createPatchFunction (backend) {
     }
   }
 
-  function updateChildren (parentElm, oldCh, newCh, insertedVnodeQueue, removeOnly) {
+  // 重排操作
+  function updateChildren(parentElm, oldCh, newCh, insertedVnodeQueue, removeOnly) {
+    // 创建首尾4个游标以及对应节点
     let oldStartIdx = 0
     let newStartIdx = 0
     let oldEndIdx = oldCh.length - 1
@@ -421,12 +423,15 @@ export function createPatchFunction (backend) {
       checkDuplicateKeys(newCh)
     }
 
+    // 循环条件：开始游标只要超过结束游标
     while (oldStartIdx <= oldEndIdx && newStartIdx <= newEndIdx) {
+      // 游标位置调整
       if (isUndef(oldStartVnode)) {
         oldStartVnode = oldCh[++oldStartIdx] // Vnode has been moved left
       } else if (isUndef(oldEndVnode)) {
         oldEndVnode = oldCh[--oldEndIdx]
       } else if (sameVnode(oldStartVnode, newStartVnode)) {
+        // 首尾判断开始
         patchVnode(oldStartVnode, newStartVnode, insertedVnodeQueue, newCh, newStartIdx)
         oldStartVnode = oldCh[++oldStartIdx]
         newStartVnode = newCh[++newStartIdx]
@@ -445,17 +450,21 @@ export function createPatchFunction (backend) {
         oldEndVnode = oldCh[--oldEndIdx]
         newStartVnode = newCh[++newStartIdx]
       } else {
+        // 首尾都没找到相同的，从新数组头一个拿出来，去老数组中寻找相同的
         if (isUndef(oldKeyToIdx)) oldKeyToIdx = createKeyToOldIdx(oldCh, oldStartIdx, oldEndIdx)
         idxInOld = isDef(newStartVnode.key)
           ? oldKeyToIdx[newStartVnode.key]
           : findIdxInOld(newStartVnode, oldCh, oldStartIdx, oldEndIdx)
         if (isUndef(idxInOld)) { // New element
+          // 没找到，创建追加
           createElm(newStartVnode, insertedVnodeQueue, parentElm, oldStartVnode.elm, false, newCh, newStartIdx)
         } else {
+          // 找到了，对两者打补丁
           vnodeToMove = oldCh[idxInOld]
           if (sameVnode(vnodeToMove, newStartVnode)) {
             patchVnode(vnodeToMove, newStartVnode, insertedVnodeQueue, newCh, newStartIdx)
             oldCh[idxInOld] = undefined
+            // 同时要做移动操作
             canMove && nodeOps.insertBefore(parentElm, vnodeToMove.elm, oldStartVnode.elm)
           } else {
             // same key but different element. treat as new element
@@ -465,15 +474,18 @@ export function createPatchFunction (backend) {
         newStartVnode = newCh[++newStartIdx]
       }
     }
+    // 收尾工作
+    // 1.老数组先结束，批量增加
     if (oldStartIdx > oldEndIdx) {
       refElm = isUndef(newCh[newEndIdx + 1]) ? null : newCh[newEndIdx + 1].elm
       addVnodes(parentElm, refElm, newCh, newStartIdx, newEndIdx, insertedVnodeQueue)
     } else if (newStartIdx > newEndIdx) {
+      // 2. 新数组先结束，批量删除
       removeVnodes(oldCh, oldStartIdx, oldEndIdx)
     }
   }
 
-  function checkDuplicateKeys (children) {
+  function checkDuplicateKeys(children) {
     const seenKeys = {}
     for (let i = 0; i < children.length; i++) {
       const vnode = children[i]
@@ -491,14 +503,14 @@ export function createPatchFunction (backend) {
     }
   }
 
-  function findIdxInOld (node, oldCh, start, end) {
+  function findIdxInOld(node, oldCh, start, end) {
     for (let i = start; i < end; i++) {
       const c = oldCh[i]
       if (isDef(c) && sameVnode(node, c)) return i
     }
   }
 
-  function patchVnode (
+  function patchVnode(
     oldVnode,
     vnode,
     insertedVnodeQueue,
@@ -539,33 +551,44 @@ export function createPatchFunction (backend) {
       return
     }
 
+    // 获取属性和钩子函数
     let i
     const data = vnode.data
     if (isDef(data) && isDef(i = data.hook) && isDef(i = i.prepatch)) {
       i(oldVnode, vnode)
     }
 
+    // 获取新旧节点孩子
     const oldCh = oldVnode.children
     const ch = vnode.children
+    // 属性更新
+    // 这里把每个callbacks中每个函数都依次执行，显得有点呆滞，vue3主要更新这里
     if (isDef(data) && isPatchable(vnode)) {
       for (i = 0; i < cbs.update.length; ++i) cbs.update[i](oldVnode, vnode)
       if (isDef(i = data.hook) && isDef(i = i.update)) i(oldVnode, vnode)
     }
+    // 新节点没有文本
     if (isUndef(vnode.text)) {
+      // 双方都有孩子
       if (isDef(oldCh) && isDef(ch)) {
+        // 重排 -- 重点
         if (oldCh !== ch) updateChildren(elm, oldCh, ch, insertedVnodeQueue, removeOnly)
       } else if (isDef(ch)) {
+        // 新节点有孩子
         if (process.env.NODE_ENV !== 'production') {
           checkDuplicateKeys(ch)
         }
         if (isDef(oldVnode.text)) nodeOps.setTextContent(elm, '')
+        // 新增
         addVnodes(elm, null, ch, 0, ch.length - 1, insertedVnodeQueue)
       } else if (isDef(oldCh)) {
+        // 老的有孩子，新的没有 删除
         removeVnodes(oldCh, 0, oldCh.length - 1)
       } else if (isDef(oldVnode.text)) {
         nodeOps.setTextContent(elm, '')
       }
     } else if (oldVnode.text !== vnode.text) {
+      // 双方都是文本
       nodeOps.setTextContent(elm, vnode.text)
     }
     if (isDef(data)) {
@@ -573,7 +596,7 @@ export function createPatchFunction (backend) {
     }
   }
 
-  function invokeInsertHook (vnode, queue, initial) {
+  function invokeInsertHook(vnode, queue, initial) {
     // delay insert hooks for component root nodes, invoke them after the
     // element is really inserted
     if (isTrue(initial) && isDef(vnode.parent)) {
@@ -593,7 +616,7 @@ export function createPatchFunction (backend) {
   const isRenderedModule = makeMap('attrs,class,staticClass,staticStyle,key')
 
   // Note: this is a browser-only function so we can assume elms are DOM nodes.
-  function hydrate (elm, vnode, insertedVnodeQueue, inVPre) {
+  function hydrate(elm, vnode, insertedVnodeQueue, inVPre) {
     let i
     const { tag, data, children } = vnode
     inVPre = inVPre || (data && data.pre)
@@ -686,7 +709,7 @@ export function createPatchFunction (backend) {
     return true
   }
 
-  function assertNodeMatch (node, vnode, inVPre) {
+  function assertNodeMatch(node, vnode, inVPre) {
     if (isDef(vnode.tag)) {
       return vnode.tag.indexOf('vue-component') === 0 || (
         !isUnknownElement(vnode, inVPre) &&
@@ -697,7 +720,7 @@ export function createPatchFunction (backend) {
     }
   }
 
-  return function patch (oldVnode, vnode, hydrating, removeOnly) {
+  return function patch(oldVnode, vnode, hydrating, removeOnly) {
     if (isUndef(vnode)) {
       if (isDef(oldVnode)) invokeDestroyHook(oldVnode)
       return

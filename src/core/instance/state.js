@@ -36,21 +36,22 @@ const sharedPropertyDefinition = {
   set: noop
 }
 
-export function proxy (target: Object, sourceKey: string, key: string) {
-  sharedPropertyDefinition.get = function proxyGetter () {
+export function proxy(target: Object, sourceKey: string, key: string) {
+  sharedPropertyDefinition.get = function proxyGetter() {
     return this[sourceKey][key]
   }
-  sharedPropertyDefinition.set = function proxySetter (val) {
+  sharedPropertyDefinition.set = function proxySetter(val) {
     this[sourceKey][key] = val
   }
   Object.defineProperty(target, key, sharedPropertyDefinition)
 }
 
-export function initState (vm: Component) {
+export function initState(vm: Component) {
   vm._watchers = []
   const opts = vm.$options
   if (opts.props) initProps(vm, opts.props)
   if (opts.methods) initMethods(vm, opts.methods)
+  // 数据响应式处理
   if (opts.data) {
     initData(vm)
   } else {
@@ -62,7 +63,7 @@ export function initState (vm: Component) {
   }
 }
 
-function initProps (vm: Component, propsOptions: Object) {
+function initProps(vm: Component, propsOptions: Object) {
   const propsData = vm.$options.propsData || {}
   const props = vm._props = {}
   // cache prop keys so that future props updates can iterate using Array
@@ -80,7 +81,7 @@ function initProps (vm: Component, propsOptions: Object) {
     if (process.env.NODE_ENV !== 'production') {
       const hyphenatedKey = hyphenate(key)
       if (isReservedAttribute(hyphenatedKey) ||
-          config.isReservedAttr(hyphenatedKey)) {
+        config.isReservedAttr(hyphenatedKey)) {
         warn(
           `"${hyphenatedKey}" is a reserved attribute and cannot be used as component prop.`,
           vm
@@ -110,8 +111,11 @@ function initProps (vm: Component, propsOptions: Object) {
   toggleObserving(true)
 }
 
-function initData (vm: Component) {
+function initData(vm: Component) {
   let data = vm.$options.data
+  // data类型为函数执行之
+  // 为什么平常我们写组件的时候data要写成一个函数呢，而在根组件(根实例)中却没有这个限制，可以写成对象或者函数？
+  // 因为组件可以复用，由于组件有可能出现多实例，一旦出现多实例，这里如果大家用一个对象，又是引用对象，会造成大家共用这个对象，这样就会造成数据污染。
   data = vm._data = typeof data === 'function'
     ? getData(data, vm)
     : data || {}
@@ -124,6 +128,7 @@ function initData (vm: Component) {
     )
   }
   // proxy data on instance
+  // 校验
   const keys = Object.keys(data)
   const props = vm.$options.props
   const methods = vm.$options.methods
@@ -149,10 +154,11 @@ function initData (vm: Component) {
     }
   }
   // observe data
+  // 执行递归处理
   observe(data, true /* asRootData */)
 }
 
-export function getData (data: Function, vm: Component): any {
+export function getData(data: Function, vm: Component): any {
   // #7573 disable dep collection when invoking data getters
   pushTarget()
   try {
@@ -167,7 +173,7 @@ export function getData (data: Function, vm: Component): any {
 
 const computedWatcherOptions = { lazy: true }
 
-function initComputed (vm: Component, computed: Object) {
+function initComputed(vm: Component, computed: Object) {
   // $flow-disable-line
   const watchers = vm._computedWatchers = Object.create(null)
   // computed properties are just getters during SSR
@@ -210,7 +216,7 @@ function initComputed (vm: Component, computed: Object) {
   }
 }
 
-export function defineComputed (
+export function defineComputed(
   target: any,
   key: string,
   userDef: Object | Function
@@ -230,7 +236,7 @@ export function defineComputed (
     sharedPropertyDefinition.set = userDef.set || noop
   }
   if (process.env.NODE_ENV !== 'production' &&
-      sharedPropertyDefinition.set === noop) {
+    sharedPropertyDefinition.set === noop) {
     sharedPropertyDefinition.set = function () {
       warn(
         `Computed property "${key}" was assigned to but it has no setter.`,
@@ -241,8 +247,8 @@ export function defineComputed (
   Object.defineProperty(target, key, sharedPropertyDefinition)
 }
 
-function createComputedGetter (key) {
-  return function computedGetter () {
+function createComputedGetter(key) {
+  return function computedGetter() {
     const watcher = this._computedWatchers && this._computedWatchers[key]
     if (watcher) {
       if (watcher.dirty) {
@@ -257,12 +263,12 @@ function createComputedGetter (key) {
 }
 
 function createGetterInvoker(fn) {
-  return function computedGetter () {
+  return function computedGetter() {
     return fn.call(this, this)
   }
 }
 
-function initMethods (vm: Component, methods: Object) {
+function initMethods(vm: Component, methods: Object) {
   const props = vm.$options.props
   for (const key in methods) {
     if (process.env.NODE_ENV !== 'production') {
@@ -290,7 +296,7 @@ function initMethods (vm: Component, methods: Object) {
   }
 }
 
-function initWatch (vm: Component, watch: Object) {
+function initWatch(vm: Component, watch: Object) {
   for (const key in watch) {
     const handler = watch[key]
     if (Array.isArray(handler)) {
@@ -303,7 +309,7 @@ function initWatch (vm: Component, watch: Object) {
   }
 }
 
-function createWatcher (
+function createWatcher(
   vm: Component,
   expOrFn: string | Function,
   handler: any,
@@ -319,7 +325,7 @@ function createWatcher (
   return vm.$watch(expOrFn, handler, options)
 }
 
-export function stateMixin (Vue: Class<Component>) {
+export function stateMixin(Vue: Class<Component>) {
   // flow somehow has problems with directly declared definition object
   // when using Object.defineProperty, so we have to procedurally build up
   // the object here.
@@ -363,7 +369,7 @@ export function stateMixin (Vue: Class<Component>) {
       invokeWithErrorHandling(cb, vm, [watcher.value], vm, info)
       popTarget()
     }
-    return function unwatchFn () {
+    return function unwatchFn() {
       watcher.teardown()
     }
   }

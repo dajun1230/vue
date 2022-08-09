@@ -7,10 +7,11 @@ import { isIE, isIOS, isNative } from './env'
 
 export let isUsingMicroTask = false
 
+// 存储用户传入回调
 const callbacks = []
 let pending = false
 
-function flushCallbacks () {
+function flushCallbacks() {
   pending = false
   const copies = callbacks.slice(0)
   callbacks.length = 0
@@ -84,11 +85,13 @@ if (typeof Promise !== 'undefined' && isNative(Promise)) {
   }
 }
 
-export function nextTick (cb?: Function, ctx?: Object) {
+// 此处nextTick就是熟悉的Vue.nextTick
+export function nextTick(cb?: Function, ctx?: Object) {
   let _resolve
   callbacks.push(() => {
     if (cb) {
       try {
+        // 调用传入回掉
         cb.call(ctx)
       } catch (e) {
         handleError(e, ctx, 'nextTick')
@@ -99,6 +102,7 @@ export function nextTick (cb?: Function, ctx?: Object) {
   })
   if (!pending) {
     pending = true
+    // 异步执行
     timerFunc()
   }
   // $flow-disable-line

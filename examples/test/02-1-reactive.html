@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="../../dist/vue.js"></script>
+</head>
+<body>
+  <div id="demo"></div>
+  <script>
+    // 创建实例
+    // 会有几个Observer? Dep? Watcher?
+    // 2 4 1
+    // data中的一个数据或者一个对象对应一个Observer，所以是2个
+    // data中的一个key对应一个Dep，这里两个key(obj、foo)，但是自身还有$attrs、以及$listeners，所以是4个
+    // 一个组件对应一个watcher，所以是1个
+    const app = new Vue({
+      el: "#demo",
+      data: {
+        obj: {
+          foo: 'foo'
+        }
+      },
+      mounted() {
+        setTimeout(() => {
+          this.obj.foo = "fooooo"
+        }, 1000)
+      }
+    })
+  </script>
+</body>
+</html>

@@ -43,7 +43,7 @@ export default class Watcher {
   getter: Function;
   value: any;
 
-  constructor (
+  constructor(
     vm: Component,
     expOrFn: string | Function,
     cb: Function,
@@ -99,7 +99,7 @@ export default class Watcher {
   /**
    * Evaluate the getter, and re-collect dependencies.
    */
-  get () {
+  get() {
     pushTarget(this)
     let value
     const vm = this.vm
@@ -126,12 +126,15 @@ export default class Watcher {
   /**
    * Add a dependency to this directive.
    */
-  addDep (dep: Dep) {
+  addDep(dep: Dep) {
     const id = dep.id
     if (!this.newDepIds.has(id)) {
+      // 如果没有保存过关系，保存一下
+      // 创建watcher和dep的关系
       this.newDepIds.add(id)
       this.newDeps.push(dep)
       if (!this.depIds.has(id)) {
+        // 反向创建dep和watcher关系
         dep.addSub(this)
       }
     }
@@ -140,7 +143,7 @@ export default class Watcher {
   /**
    * Clean up for dependency collection.
    */
-  cleanupDeps () {
+  cleanupDeps() {
     let i = this.deps.length
     while (i--) {
       const dep = this.deps[i]
@@ -162,7 +165,7 @@ export default class Watcher {
    * Subscriber interface.
    * Will be called when a dependency changes.
    */
-  update () {
+  update() {
     /* istanbul ignore else */
     if (this.lazy) {
       this.dirty = true
@@ -177,7 +180,7 @@ export default class Watcher {
    * Scheduler job interface.
    * Will be called by the scheduler.
    */
-  run () {
+  run() {
     if (this.active) {
       const value = this.get()
       if (
@@ -205,7 +208,7 @@ export default class Watcher {
    * Evaluate the value of the watcher.
    * This only gets called for lazy watchers.
    */
-  evaluate () {
+  evaluate() {
     this.value = this.get()
     this.dirty = false
   }
@@ -213,7 +216,7 @@ export default class Watcher {
   /**
    * Depend on all deps collected by this watcher.
    */
-  depend () {
+  depend() {
     let i = this.deps.length
     while (i--) {
       this.deps[i].depend()
@@ -223,7 +226,7 @@ export default class Watcher {
   /**
    * Remove self from all dependencies' subscriber list.
    */
-  teardown () {
+  teardown() {
     if (this.active) {
       // remove self from vm's watcher list
       // this is a somewhat expensive operation so we skip it
